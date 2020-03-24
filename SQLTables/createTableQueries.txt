@@ -1,0 +1,30 @@
+CREATE TABLE route_master(rmid SERIAL,route_type varchar(20) Not Null,route_id varchar(10) primary key,source_stop_id integer NOT Null,destination_stop_id integer not null,last_modified timestamp default current_timestamp);
+
+ \COPY route_master(rmid,route_type,route_id,source_stop_id,destination_stop_id) from '/home/vrushali/Documents/pmpmlFinal/Final3Tables/RouteMasterStopKeys.csv' WITH CSV HEADER;
+
+
+create table bus_stops(stop_id SERIAL primary key,stop_name varchar(50) Not Null,latitude float not null,longitude float not null,last_modified timestamp default current_timestamp);
+
+\COPY bus_stops(stop_id,stop_name,latitude,longitude) from '/home/vrushali/Documents/pmpmlFinal/Final3Tables/latlong.csv' WITH CSV HEADER;
+
+
+create table bus_routes(brid SERIAL,route_id varchar(10) references route_master on delete cascade on update cascade,stop_id int references bus_stops on delete cascade on update cascade,stop_seq int not null,stage int,primary key(route_id,stop_id,stop_seq),last_modified timestamp default current_timestamp);
+
+ \COPY bus_routes(route_id,stop_id,stop_seq,stage) from '/home/vrushali/Documents/pmpmlFinal/Final3Tables/allroutes.csv' WITH CSV HEADER;
+COPY 33727
+
+create table arrivaltime(srno serial,route_id varchar(10) references route_master on delete cascade on update cascade,trip_id varchar(20),stop_seq int not null,stop_id int references bus_stops on delete cascade on update cascade,arrivaltime TIME,last_modified timestamp default current_timestamp);
+
+\copy arrivaltime(route_id,trip_id,stop_seq,stop_id,arrivaltime) from '/home/vrushali/arrivalTimecopy.csv' with csv header; 
+
+
+
+
+
+
+
+
+
+
+
+
